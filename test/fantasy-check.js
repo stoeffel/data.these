@@ -3,6 +3,7 @@
 var mochaAdapter = require('fantasy-check/src/adapters/mocha');
 var applicative = require('fantasy-check/src/laws/applicative');
 var functor = require('fantasy-check/src/laws/functor');
+var comonad = require('fantasy-check/src/laws/comonad');
 
 var Theese = require('../lib/these');
 var These = Theese.These;
@@ -11,6 +12,10 @@ var That = Theese.That;
 
 var run = function (m) {
     return m.get();
+};
+
+var identity = function (x) {
+    return x;
 };
 
 var obey = function (title, testFactory, factoryArgs, skipped) {
@@ -26,45 +31,72 @@ obey.skip = function (title, testFactory, factoryArgs) {
 
 describe('Fantasy-Check', function () {
     describe('#This', function () {
-        // Functor tests
-        obey('All (Functor)', functor.laws, [ This, run ]);
-        obey('Identity (Functor)', functor.identity, [ This, run ]);
-        obey('Composition (Functor)', functor.composition, [ This, run ]);
+        describe('Functor', function () {
+            obey('All', functor.laws, [ This, run ]);
+            obey('Identity', functor.identity, [ This, run ]);
+            obey('Composition', functor.composition, [ This, run ]);
+        });
 
-        // Applicative Functor tests
-        obey('All (Applicative)', applicative.laws, [ This, run ]);
-        obey('Identity (Applicative)', applicative.identity, [ This, run ]);
-        obey('Composition (Applicative)', applicative.composition, [ This, run ]);
-        obey('Homomorphism (Applicative)', applicative.homomorphism, [ This, run ]);
-        obey('Interchange (Applicative)', applicative.interchange, [ This, run ]);
+        describe('Applicative Functor', function () {
+            obey('All', applicative.laws, [ This, run ]);
+            obey('Identity', applicative.identity, [ This, run ]);
+            obey('Composition', applicative.composition, [ This, run ]);
+            obey('Homomorphism', applicative.homomorphism, [ This, run ]);
+            obey('Interchange', applicative.interchange, [ This, run ]);
+        });
+
+        describe('Comonad', function () {
+            obey('All', comonad.laws, [ This, identity ]);
+            obey('Identity', comonad.identity, [ This, identity ]);
+            obey('Composition', comonad.composition, [ This, identity ]);
+            obey('Associativity', comonad.associativity, [ This, identity ]);
+        });
     });
 
     describe('#That', function () {
-        // Functor tests
-        obey('All (Functor)', functor.laws, [ That, run ]);
-        obey('Identity (Functor)', functor.identity, [ That, run ]);
-        obey('Composition (Functor)', functor.composition, [ That, run ]);
+        describe('Functor', function () {
+            obey('All', functor.laws, [ That, run ]);
+            obey('Identity', functor.identity, [ That, run ]);
+            obey('Composition', functor.composition, [ That, run ]);
+        });
 
-        // Applicative Functor tests
-        obey('All (Applicative)', applicative.laws, [ That, run ]);
-        obey('Identity (Applicative)', applicative.identity, [ That, run ]);
-        obey('Composition (Applicative)', applicative.composition, [ That, run ]);
-        obey('Homomorphism (Applicative)', applicative.homomorphism, [ That, run ]);
-        obey('Interchange (Applicative)', applicative.interchange, [ That, run ]);
+        describe('Applicative', function () {
+            obey('All', applicative.laws, [ That, run ]);
+            obey('Identity', applicative.identity, [ That, run ]);
+            obey('Composition', applicative.composition, [ That, run ]);
+            obey('Homomorphism', applicative.homomorphism, [ That, run ]);
+            obey('Interchange', applicative.interchange, [ That, run ]);
+        });
+
+        describe('Comonad', function () {
+            obey('All', comonad.laws, [ That, identity ]);
+            obey('Identity', comonad.identity, [ That, identity ]);
+            obey('Composition', comonad.composition, [ That, identity ]);
+            obey('Associativity', comonad.associativity, [ That, identity ]);
+        });
     });
 
     describe('#These', function () {
-        // Functor tests
-        obey('All (Functor)', functor.laws, [ These, run ]);
-        obey('Identity (Functor)', functor.identity, [ These, run ]);
-        obey('Composition (Functor)', functor.composition, [ These, run ]);
+        describe('Functor', function () {
+            obey('All', functor.laws, [ These, run ]);
+            obey('Identity', functor.identity, [ These, run ]);
+            obey('Composition', functor.composition, [ These, run ]);
+        });
 
-        // Applicative Functor tests
-        obey('All (Applicative)', applicative.laws, [ These, run ]);
-        obey('Identity (Applicative)', applicative.identity, [ These, run ]);
-        obey('Composition (Applicative)', applicative.composition, [ These, run ]);
-        obey('Homomorphism (Applicative)', applicative.homomorphism, [ These, run ]);
-        obey('Interchange (Applicative)', applicative.interchange, [ These, run ]);
+        describe('Applicative', function () {
+            obey('All', applicative.laws, [ These, run ]);
+            obey('Identity', applicative.identity, [ These, run ]);
+            obey('Composition', applicative.composition, [ These, run ]);
+            obey('Homomorphism', applicative.homomorphism, [ These, run ]);
+            obey('Interchange', applicative.interchange, [ These, run ]);
+        });
+
+        describe('Comonad', function () {
+            obey('All', comonad.laws, [ These, identity ]);
+            obey('Identity', comonad.identity, [ These, identity ]);
+            obey('Composition', comonad.composition, [ These, identity ]);
+            obey('Associativity', comonad.associativity, [ These, identity ]);
+        });
     });
 });
 
